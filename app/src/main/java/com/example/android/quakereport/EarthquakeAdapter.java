@@ -14,6 +14,10 @@ import java.util.Locale;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.text.DecimalFormat;
+
+import static com.example.android.quakereport.R.id.location;
+import static com.example.android.quakereport.R.id.magnitude;
 
 /**
  * Created by Emma Buchheim on 10/22/2017.
@@ -37,8 +41,11 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
         Earthquake currentEarthquake = getItem(position);
 
+        DecimalFormat decimalFormat = new DecimalFormat("0.0");
+        String magToDisplay = decimalFormat.format(currentEarthquake.getMagnitude());
+
         TextView magnitudeTextView = (TextView) listItemView.findViewById(R.id.magnitude);
-        magnitudeTextView.setText(String.format(Locale.US, "%.1f", currentEarthquake.getMagnitude()));
+        magnitudeTextView.setText(magToDisplay);
 
         Date dateObject = new Date(currentEarthquake.getTimeInMilliseconds());
 
@@ -54,8 +61,28 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         TextView dateTextView = (TextView) listItemView.findViewById(R.id.date);
         dateTextView.setText(dateToDisplay);
 
+
+
+        String location = currentEarthquake.getLocation();
+
+        String primaryLocation;
+        String descriptorLocation;
+
+        if (location.contains(" of ")) {
+            int locationSeparator = location.indexOf(" of ") + 3;
+            descriptorLocation = location.substring(0, locationSeparator);
+            primaryLocation = location.substring(locationSeparator);
+        } else {
+            descriptorLocation = "Near the";
+            primaryLocation = location;
+
+        }
+
         TextView locationTextView = (TextView) listItemView.findViewById(R.id.location);
-        locationTextView.setText(currentEarthquake.getLocation());
+        locationTextView.setText(primaryLocation);
+
+        TextView locationDescriptorTextView = (TextView) listItemView.findViewById(R.id.location_descriptor);
+        locationDescriptorTextView.setText(descriptorLocation);
 
         return listItemView;
 
