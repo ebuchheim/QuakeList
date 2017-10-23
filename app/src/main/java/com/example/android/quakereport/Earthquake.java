@@ -1,5 +1,7 @@
 package com.example.android.quakereport;
 
+import static com.example.android.quakereport.R.id.date;
+
 /**
  * Created by Emma Buchheim on 10/21/2017.
  */
@@ -7,20 +9,21 @@ package com.example.android.quakereport;
 public class Earthquake {
 
     private double mMagnitude;
-    private int mDate;
     private String mLocation;
+    /** Time of the earthquake */
+    private long mTimeInMilliseconds;
 
-    public Earthquake (double magnitude, int date, String location) {
+    public Earthquake (double magnitude, long timeInMilliseconds, String location) {
         mMagnitude = magnitude;
-        mDate = date;
+        mTimeInMilliseconds = timeInMilliseconds;
         mLocation = location;
     }
 
     public double getMagnitude() {
         return mMagnitude;
     }
-    public int getDate() {
-        return mDate;
+    public long getTimeInMilliseconds() {
+        return mTimeInMilliseconds;
     }
     public String getLocation() {
         return mLocation;
