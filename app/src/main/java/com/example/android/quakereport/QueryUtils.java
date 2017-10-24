@@ -6,6 +6,10 @@ package com.example.android.quakereport;
 
 import org.json.JSONException;
 
+import java.io.IOError;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 
         import android.util.Log;
@@ -65,11 +69,11 @@ public final class QueryUtils {
                 double magnitude = quakeProperties.getDouble("mag");
                 String location = quakeProperties.getString("place");
                 long time = quakeProperties.getLong("time");
-                earthquakes.add(new Earthquake(magnitude, time, location));
+                String quakeURLString = quakeProperties.getString("url");
+
+                earthquakes.add(new Earthquake(magnitude, time, location, quakeURLString));
 
             }
-
-
 
 
         } catch (JSONException e) {

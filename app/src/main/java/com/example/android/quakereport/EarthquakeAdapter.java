@@ -1,6 +1,9 @@
 package com.example.android.quakereport;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -25,8 +28,11 @@ import static com.example.android.quakereport.R.id.magnitude;
 
 public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
+    Context mContext;
+
     public EarthquakeAdapter(Activity context, ArrayList<Earthquake> earthquakes) {
         super(context, 0, earthquakes);
+        mContext = context;
     }
 
     @NonNull
@@ -39,7 +45,7 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
                     R.layout.list_item, parent, false);
         }
 
-        Earthquake currentEarthquake = getItem(position);
+        final Earthquake currentEarthquake = getItem(position);
 
         DecimalFormat decimalFormat = new DecimalFormat("0.0");
         String magToDisplay = decimalFormat.format(currentEarthquake.getMagnitude());
@@ -94,6 +100,17 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         TextView locationDescriptorTextView = (TextView) listItemView.findViewById(R.id.location_descriptor);
         locationDescriptorTextView.setText(descriptorLocation);
 
+        listItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String url = currentEarthquake.getURLString();
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                mContext.startActivity(i);
+        }
+        });
+
         return listItemView;
 
     }
@@ -136,5 +153,6 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         }
         return ContextCompat.getColor(getContext(), magnitudeColorResourceId);
     }
+
 }
 

@@ -1,5 +1,7 @@
 package com.example.android.quakereport;
 
+import java.net.URL;
+
 import static com.example.android.quakereport.R.id.date;
 
 /**
@@ -10,13 +12,15 @@ public class Earthquake {
 
     private double mMagnitude;
     private String mLocation;
+    private String mQuakeURLString;
     /** Time of the earthquake */
     private long mTimeInMilliseconds;
 
-    public Earthquake (double magnitude, long timeInMilliseconds, String location) {
+    public Earthquake (double magnitude, long timeInMilliseconds, String location, String quakeURLString) {
         mMagnitude = magnitude;
         mTimeInMilliseconds = timeInMilliseconds;
         mLocation = location;
+        mQuakeURLString = quakeURLString;
     }
 
     public double getMagnitude() {
@@ -28,4 +32,5 @@ public class Earthquake {
     public String getLocation() {
         return mLocation;
     }
+    public String getURLString() { return mQuakeURLString; }
 }
