@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.text.DecimalFormat;
 import android.graphics.drawable.GradientDrawable;
-import static com.example.android.quakereport.R.id.location;
 import static com.example.android.quakereport.R.id.magnitude;
 
 /**
