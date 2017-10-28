@@ -36,41 +36,29 @@ public class EarthquakeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
-
-//        // Create a fake list of earthquake locations.
-//        ArrayList<Earthquake> earthquakes = new ArrayList<>();
-//        earthquakes.add(new Earthquake(5.6, "March 6, 2017", "San Francisco"));
-//        earthquakes.add(new Earthquake(6.3, "February 3, 2014", "Kuwait"));
-//        earthquakes.add(new Earthquake(4.3, "June 5, 2016", "Paris"));
-//        earthquakes.add(new Earthquake(7.6, "July 4, 2017", "Mexico City"));
-//        earthquakes.add(new Earthquake(3.4, "January 24, 2009", "Los Angeles"));
-//        earthquakes.add(new Earthquake(4.9, "September 30, 2013", "Rio de Janeiro"));
-//        earthquakes.add(new Earthquake(5.9, "November 10, 2004", "London"));
-
-        // Create a fake list of earthquakes.
-        ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
-
-        // Find a reference to the {@link ListView} in the layout
-        ListView earthquakeListView = (ListView) findViewById(R.id.list);
-
-        // Create a new {@link ArrayAdapter} of earthquakes
-        EarthquakeAdapter adapter = new EarthquakeAdapter(this, earthquakes);
-
-        // Set the adapter on the {@link ListView}
-        // so the list can be populated in the user interface
-        earthquakeListView.setAdapter(adapter);
     }
 
     private class EarthquakeAsyncTask extends AsyncTask<String, Void, List<Earthquake>> {
 
         @Override
         protected List<Earthquake> doInBackground(String... urls) {
+            ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
             return null;
         }
 
         @Override
         protected void onPostExecute(List<Earthquake> earthquakes) {
             super.onPostExecute(earthquakes);
+
+            // Find a reference to the {@link ListView} in the layout
+            ListView earthquakeListView = (ListView) findViewById(R.id.list);
+
+            // Create a new {@link ArrayAdapter} of earthquakes
+            EarthquakeAdapter adapter = new EarthquakeAdapter(EarthquakeActivity.this, (ArrayList<Earthquake>) earthquakes);
+
+            // Set the adapter on the {@link ListView}
+            // so the list can be populated in the user interface
+            earthquakeListView.setAdapter(adapter);
         }
     }
 }
