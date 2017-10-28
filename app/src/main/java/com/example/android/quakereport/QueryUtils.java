@@ -6,13 +6,20 @@ package com.example.android.quakereport;
 
 import org.json.JSONException;
 
+import java.io.BufferedReader;
 import java.io.IOError;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-        import android.util.Log;
+import android.text.TextUtils;
+import android.util.Log;
 
         import org.json.JSONArray;
         import org.json.JSONException;
@@ -20,6 +27,9 @@ import java.util.ArrayList;
 import org.json.JSONStringer;
 
 import java.util.ArrayList;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
+import static com.example.android.quakereport.EarthquakeActivity.LOG_TAG;
 
 /**
  * Helper methods related to requesting and receiving earthquake data from USGS.
@@ -46,21 +56,103 @@ public final class QueryUtils {
     private QueryUtils() {
     }
 
+    public static ArrayList<Earthquake> FetchEarthquakeData(String urlString) {
+        //convert the url string into a url
+        URL url = createURL(urlString);
+        //fetch the JSON from the url
+
+        // Perform HTTP request to the URL and receive a JSON response back
+
+        String earthquakeJSON = "";
+        try {
+            earthquakeJSON = makeHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error with IOEException");
+        }
+
+
+        //parse the JSON into an array list of quakes, return the list of quakes
+        return extractEarthquakes(earthquakeJSON);
+    }
+
+    private static URL createURL(String urlString) {
+        URL url = null;
+        try {
+            url = new URL(urlString);
+        } catch (MalformedURLException exception) {
+            Log.e(LOG_TAG, "Error with creating URL", exception);
+            return null;
+        }
+        return url;
+    }
+
+    private static String makeHttpRequest(URL url) throws IOException{
+        String jsonResponse = "";
+        if (url == null){
+            return jsonResponse;
+        }
+        HttpURLConnection urlConnection = null;
+        InputStream inputStream = null;
+        try{
+            urlConnection = (HttpURLConnection)url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setReadTimeout(10000/* milliseconds */);
+            urlConnection.setConnectTimeout(15000/* milliseconds */);
+            urlConnection.connect();
+            if(urlConnection.getResponseCode() == 200) {
+                inputStream = urlConnection.getInputStream();
+                jsonResponse = readFromStream(inputStream);
+            } else {
+                Log.e(LOG_TAG, "The response code wasn't 200");
+            }
+        } catch (IOException e){
+            Log.e(LOG_TAG, "This threw an IOExepction");
+        } finally {
+            if(urlConnection != null) {
+                inputStream.close();
+            }
+        }
+        return jsonResponse;
+    }
+
+    /**
+     * Convert the {@link InputStream} into a String which contains the
+     * whole JSON response from the server.
+     */
+    private static String readFromStream(InputStream inputStream) throws IOException {
+        StringBuilder output = new StringBuilder();
+        if (inputStream != null) {
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
+            BufferedReader reader = new BufferedReader(inputStreamReader);
+            String line = reader.readLine();
+            while (line != null) {
+                output.append(line);
+                line = reader.readLine();
+            }
+        }
+        return output.toString();
+    }
+
     /**
      * Return a list of {@link Earthquake} objects that has been built up from
      * parsing a JSON response.
      */
-    public static ArrayList<Earthquake> extractEarthquakes() {
+    public static ArrayList<Earthquake> extractEarthquakes(String earthquakeJSON) {
 
         // Create an empty ArrayList that we can start adding earthquakes to
         ArrayList<Earthquake> earthquakes = new ArrayList<>();
+
+        // If the JSON string is empty or null, then return early.
+        if (TextUtils.isEmpty(earthquakeJSON)) {
+            return null;
+        }
 
         // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
         // is formatted, a JSONException exception object will be thrown.
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
 
-            JSONObject root = new JSONObject(SAMPLE_JSON_RESPONSE);
+            JSONObject root = new JSONObject(earthquakeJSON);
             JSONArray quakeFeatures = root.getJSONArray("features");
 
             for (int i = 0; i < quakeFeatures.length(); i++) {

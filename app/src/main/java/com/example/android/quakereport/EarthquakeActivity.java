@@ -36,14 +36,21 @@ public class EarthquakeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
+        new EarthquakeAsyncTask().execute(USGS_REQUEST_URL);
     }
 
     private class EarthquakeAsyncTask extends AsyncTask<String, Void, List<Earthquake>> {
 
         @Override
         protected List<Earthquake> doInBackground(String... urls) {
-            ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
-            return null;
+            ArrayList<Earthquake> earthquakes = QueryUtils.FetchEarthquakeData(urls[0]);
+
+            // Don't perform the request if there are no URLs, or the first URL is null.
+            if (urls.length < 1 || urls[0] == null) {
+                return null;
+            }
+
+            return earthquakes;
         }
 
         @Override
