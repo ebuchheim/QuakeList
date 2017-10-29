@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 package com.example.android.quakereport;
+import android.app.LoaderManager;
 
 import android.content.Intent;
+import android.content.Loader;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,9 +32,11 @@ import java.util.List;
 
 import static android.R.attr.data;
 
-public class EarthquakeActivity extends AppCompatActivity {
+public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks {
 
-    /** URL to query the USGS dataset for earthquake information */
+    /**
+     * URL to query the USGS dataset for earthquake information
+     */
     private static final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
 
     private EarthquakeAdapter mAdapter;
@@ -67,32 +71,49 @@ public class EarthquakeActivity extends AppCompatActivity {
             }
         });
 
+        getLoaderManager().initLoader(0, null, this);
 
-        new EarthquakeAsyncTask().execute(USGS_REQUEST_URL);
+//        new EarthquakeAsyncTask().execute(USGS_REQUEST_URL);
     }
 
-    private class EarthquakeAsyncTask extends AsyncTask<String, Void, List<Earthquake>> {
-
-        @Override
-        protected List<Earthquake> doInBackground(String... urls) {
-            ArrayList<Earthquake> earthquakes = QueryUtils.FetchEarthquakeData(urls[0]);
-
-            // Don't perform the request if there are no URLs, or the first URL is null.
-            if (urls.length < 1 || urls[0] == null) {
-                return null;
-            }
-
-            return earthquakes;
-        }
-
-        @Override
-        protected void onPostExecute(List<Earthquake> data) {
-            // Clear the adapter of previous earthquake data
-            mAdapter.clear();
-
-            if (data != null && !data.isEmpty()) {
-                mAdapter.addAll(data);
-            }
-        }
+    @Override
+    public Loader onCreateLoader(int i, Bundle bundle) {
+        return null;
     }
+
+    @Override
+    public void onLoadFinished(Loader loader, Object o) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+
+    }
+
+    //
+//    private class EarthquakeAsyncTask extends AsyncTask<String, Void, List<Earthquake>> {
+//
+//        @Override
+//        protected List<Earthquake> doInBackground(String... urls) {
+//            ArrayList<Earthquake> earthquakes = QueryUtils.FetchEarthquakeData(urls[0]);
+//
+//            // Don't perform the request if there are no URLs, or the first URL is null.
+//            if (urls.length < 1 || urls[0] == null) {
+//                return null;
+//            }
+//
+//            return earthquakes;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(List<Earthquake> data) {
+//            // Clear the adapter of previous earthquake data
+//            mAdapter.clear();
+//
+//            if (data != null && !data.isEmpty()) {
+//                mAdapter.addAll(data);
+//            }
+//        }
+//    }
 }
