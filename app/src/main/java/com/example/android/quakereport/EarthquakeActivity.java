@@ -27,12 +27,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.R.attr.data;
+import static android.view.View.GONE;
 
 public class EarthquakeActivity extends AppCompatActivity implements LoaderCallbacks<List<Earthquake>> {
 
@@ -98,6 +100,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
 
         TextView emptyView = (TextView) findViewById(R.id.no_quakes);
         emptyView.setText("No earthquakes to display");
+
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_indicator);
+        progressBar.setVisibility(GONE);
     }
 
     @Override
