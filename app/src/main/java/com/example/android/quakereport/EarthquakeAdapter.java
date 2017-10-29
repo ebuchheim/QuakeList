@@ -100,17 +100,6 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         TextView locationDescriptorTextView = (TextView) listItemView.findViewById(R.id.location_descriptor);
         locationDescriptorTextView.setText(descriptorLocation);
 
-        listItemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String url = currentEarthquake.getURLString();
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                mContext.startActivity(i);
-        }
-        });
-
         return listItemView;
 
     }
