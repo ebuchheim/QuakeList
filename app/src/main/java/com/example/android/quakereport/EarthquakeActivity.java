@@ -15,7 +15,7 @@
  */
 package com.example.android.quakereport;
 import android.app.LoaderManager;
-
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
 import android.content.Loader;
 import android.net.Uri;
@@ -32,7 +32,7 @@ import java.util.List;
 
 import static android.R.attr.data;
 
-public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks {
+public class EarthquakeActivity extends AppCompatActivity implements LoaderCallbacks<List<Earthquake>> {
 
     /**
      * URL to query the USGS dataset for earthquake information
@@ -77,17 +77,17 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     }
 
     @Override
-    public Loader onCreateLoader(int i, Bundle bundle) {
+    public Loader<List<Earthquake>> onCreateLoader(int i, Bundle bundle) {
         return null;
     }
 
     @Override
-    public void onLoadFinished(Loader loader, Object o) {
+    public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
 
     }
 
     @Override
-    public void onLoaderReset(Loader loader) {
+    public void onLoaderReset(Loader<List<Earthquake>> loader) {
 
     }
 
