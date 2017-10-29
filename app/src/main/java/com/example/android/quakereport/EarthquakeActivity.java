@@ -16,11 +16,15 @@
 package com.example.android.quakereport;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -79,14 +83,22 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
             }
         });
 
-        getLoaderManager().initLoader(0, null, this);
+        ConnectivityManager connmgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connmgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            getLoaderManager().initLoader(0, null, this);
+        } else {
+            ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_indicator);
+            progressBar.setVisibility(GONE);
 
-//        new EarthquakeAsyncTask().execute(USGS_REQUEST_URL);
+            emptyView.setText("No internet connectivity");
+        }
     }
 
     @Override
     public Loader<List<Earthquake>> onCreateLoader(int i, Bundle bundle) {
         return new EarthquakeLoader(this, USGS_REQUEST_URL);
+
     }
 
     @Override

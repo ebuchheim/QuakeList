@@ -109,6 +109,9 @@ public final class QueryUtils {
             Log.e(LOG_TAG, "This threw an IOExepction");
         } finally {
             if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            if (inputStream != null) {
                 inputStream.close();
             }
         }
