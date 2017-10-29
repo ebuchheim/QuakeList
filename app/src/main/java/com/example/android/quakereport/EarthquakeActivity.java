@@ -22,10 +22,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,10 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(mAdapter);
 
+        TextView emptyView = (TextView) findViewById(R.id.no_quakes);
+
+        earthquakeListView.setEmptyView(emptyView);
+
         earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -71,7 +77,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
             }
         });
 
-        getLoaderManager().initLoader(0, null, this).forceLoad();
+        getLoaderManager().initLoader(0, null, this);
 
 //        new EarthquakeAsyncTask().execute(USGS_REQUEST_URL);
     }
@@ -89,6 +95,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
         if (earthquakes != null && !earthquakes.isEmpty()) {
             mAdapter.addAll(earthquakes);
         }
+
+        TextView emptyView = (TextView) findViewById(R.id.no_quakes);
+        emptyView.setText("No earthquakes to display");
     }
 
     @Override

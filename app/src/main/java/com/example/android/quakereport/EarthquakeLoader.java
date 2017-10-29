@@ -20,6 +20,10 @@ public class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
         mUrl = url;
     }
 
+    @Override
+    protected void onStartLoading() {
+        forceLoad();
+    }
 
     @Override
     public List<Earthquake> loadInBackground() {
